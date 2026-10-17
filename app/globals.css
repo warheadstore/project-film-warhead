@@ -1,0 +1,153 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Figtree:wght@400;500;600;700;800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: #080A0C;
+  color: #E8EDF2;
+  font-family: 'Figtree', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #2a3340; border-radius: 4px; }
+
+/* Shimmer skeleton */
+.skeleton {
+  background: linear-gradient(90deg, #161B20 25%, #1E252D 50%, #161B20 75%);
+  background-size: 600px 100%;
+  animation: shimmer 1.8s linear infinite;
+}
+
+/* Poster card hover */
+.poster-card { position: relative; overflow: hidden; }
+.poster-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.poster-card:hover::after { opacity: 1; }
+
+/* Hide scrollbar for horizontal scroll */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Line clamp */
+.line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.line-clamp-4 { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* Safe area bottom */
+.pb-safe { padding-bottom: calc(4rem + env(safe-area-inset-bottom)); }
+
+/* Install page — Live status styles */
+.live-dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:#505A65; flex-shrink:0; }
+.live-dot.good { background:#22c55e; }
+.live-dot.bad  { background:#ef4444; }
+.live-dot.pulse { animation: livePulse 1.5s ease-in-out infinite; }
+@keyframes livePulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.5); }
+  50%      { box-shadow: 0 0 0 5px rgba(34,197,94,0); }
+}
+
+/* Star rating pop — micro-interaction singkat saat rating tersimpan,
+   masing-masing bintang dikasih animationDelay sedikit berbeda di JSX
+   supaya efeknya menjalar dari bintang pertama ke terakhir. */
+.star-pop {
+  animation: starPop 0.35s ease-out;
+}
+@keyframes starPop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.4); }
+  100% { transform: scale(1); }
+}
+
+/* Ping bars */
+#livePingBars i {
+  display: inline-block;
+  width: 4px;
+  border-radius: 2px;
+  background: #2a3340;
+  transition: background 0.3s;
+}
+#livePingBars i.active { background: currentColor; }
+
+/* Ping graph bars */
+#livePingGraph span {
+  display: inline-block;
+  width: 6px;
+  border-radius: 2px;
+  margin-right: 2px;
+  transition: height 0.3s;
+}
+#livePingGraph span.good { background: #22c55e; }
+#livePingGraph span.ok   { background: #f59e0b; }
+#livePingGraph span.slow { background: #f97316; }
+#livePingGraph span.bad  { background: #ef4444; }
+
+/* Install btn disabled */
+#installActionBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Genre marquee — loop tak terbatas, geser 50% karena konten digandakan 2x,
+   jadi begitu sampai ujung langsung nyambung mulus ke set kedua yang identik. */
+.genre-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: genreMarquee 55s linear infinite;
+  /* Paksa track ini render di layer GPU sendiri (bukan di-repaint bareng
+     konten lain di sekitarnya). Tanpa ini, browser kadang "kejar" nge-render
+     ulang seluruh track pas animasi restart di titik akhir siklus, dan itu
+     yang keliatan sebagai patahan/lompatan kecil tiap satu putaran selesai —
+     bukan soal titik translate-nya, tapi soal kelancaran repaint di detik itu. */
+  will-change: transform;
+  backface-visibility: hidden;
+}
+@keyframes genreMarquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* Genre card — chip homepage & grid /genre pakai gradient dua-warna (var
+   --g1/--g2 di-set inline per genre lewat style prop) supaya tiap genre
+   punya identitas warna sendiri, bukan outline flat yang datar semua. */
+.genre-card {
+  position: relative;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--g1) 22%, #12151A), color-mix(in srgb, var(--g2) 14%, #12151A));
+  border: 1px solid color-mix(in srgb, var(--g1) 45%, transparent);
+  transition: transform 0.18s ease, border-color 0.18s ease;
+}
+.genre-card:active { transform: scale(0.96); }
+.genre-card .genre-icon-bubble {
+  background: linear-gradient(135deg, var(--g1), var(--g2));
+  box-shadow: 0 3px 10px -2px color-mix(in srgb, var(--g1) 60%, transparent);
+}
+
+/* Chip kecil (homepage marquee) — versi ringkas dari genre-card */
+.genre-chip {
+  position: relative;
+  background: linear-gradient(120deg, color-mix(in srgb, var(--g1) 26%, #12151A), color-mix(in srgb, var(--g2) 16%, #12151A));
+  border: 1px solid color-mix(in srgb, var(--g1) 50%, transparent);
+  transition: transform 0.15s ease;
+}
+.genre-chip:active { transform: scale(0.94); }
+.genre-chip .genre-icon-dot {
+  background: linear-gradient(135deg, var(--g1), var(--g2));
+}
+
+/* Hero carousel — progress bar auto-slide (gaya Netflix), mengisi dari 0%
+   ke 100% selama durasi AUTO_INTERVAL sebelum pindah ke slide berikutnya. */
+@keyframes heroProgress {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
