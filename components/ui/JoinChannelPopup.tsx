@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
-const CHANNEL_URL = 'https://whatsapp.com/channel/0029Vb7ktztDp2Q3VWHK4o1a';
+const CHANNEL_URL = 'https://whatsapp.com/channel/0029VbBojZB7DAWzCz6RGD1k';
 const STORAGE_KEY  = 'mz_join_channel_last_shown';
 const WEEK_MS      = 7 * 24 * 60 * 60 * 1000;
 
@@ -83,7 +83,7 @@ export default function JoinChannelPopup() {
           </a>
 
           <p className="text-center text-dim text-[10px] mt-3">
-            ThanzX — Developer & maintainer WARHEAD SHOP
+            ThanzX — Developer & maintenance WARHEAD SHOP Ramadani Muhammad
           </p>
         </div>
       </div>
